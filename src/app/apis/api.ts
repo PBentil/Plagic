@@ -8,13 +8,12 @@ export async function loginUser(email: string, password: string) {
     });
 
     if (!res.ok) {
-        throw new Error("Login failed");
+        throw new Error( "Login failed");
     }
 
     return res.json();
 }
 
-// FORGOT PASSWORD
 export async function forgotPassword(email: string) {
     const res = await fetch(`${API_URL}/auth/forgot-password`, {
         method: "POST",
@@ -23,22 +22,26 @@ export async function forgotPassword(email: string) {
     });
 
     if (!res.ok) {
-        throw new Error("Failed to send reset link");
+        throw new Error("Reset link failed");
     }
 
     return res.json();
 }
 
-// RESET PASSWORD
-export async function resetPassword(token: string, password: string) {
+export async function resetPassword(payload: {
+    token: string;
+    newPassword: string;
+    confirmPassword: string;
+}) {
     const res = await fetch(`${API_URL}/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, password }),
+        body: JSON.stringify(payload),
     });
 
     if (!res.ok) {
-        throw new Error("Password reset failed");
+        const error = await res.json();
+        throw new Error(error.message || "Password reset failed");
     }
 
     return res.json();
