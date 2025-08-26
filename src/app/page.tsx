@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Form, Input, Button, message, Spin } from "antd";
 import { FaListCheck } from "react-icons/fa6";
-import { loginUser } from "@/app/lib/api";
+import { loginUser } from "@/app/apis/api";
 
 export default function Login() {
     const [loading, setLoading] = useState(false);
