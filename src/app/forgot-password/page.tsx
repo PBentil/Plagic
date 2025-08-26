@@ -2,23 +2,22 @@
 import { useState } from "react";
 import { Form, Input, Button, message, Spin } from "antd";
 import { FaListCheck } from "react-icons/fa6";
-import { loginUser } from "@/app/apis/api";
 import Link from "next/link";
+import {forgotPassword} from "@/app/apis/api";
 
-export default function Login() {
+export default function page() {
     const [loading, setLoading] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
 
-    const handleLogin = async (values: { email: string; password: string }) => {
+    const handleForgot = async (values: { email: string }) => {
         setLoading(true);
         try {
-            const data = await loginUser(values.email, values.password);
-            messageApi.success("Login successful!");
+            const data = await forgotPassword(values.email);
+            messageApi.success("Reset link sent successful!");
             console.log("User data:", data);
 
-            window.location.href = "/dashboard";
         } catch (err: any) {
-            messageApi.error(err.message || "Login failed");
+            messageApi.error(err.message || "Failed to send reset link!");
         } finally {
             setLoading(false);
         }
@@ -35,11 +34,11 @@ export default function Login() {
                     </div>
 
                     <div className="text-gray-500 space-y-2">
-                        <h1 className="text-xl text-black font-semibold">Login</h1>
-                        <p>Please enter your login details to access your account</p>
+                        <h1 className="text-xl text-black font-semibold">Forgot Password</h1>
+                        <p>Please enter your email to receive the reset link in your mail</p>
                     </div>
 
-                    <Form layout="vertical" onFinish={handleLogin} autoComplete="off">
+                    <Form layout="vertical" onFinish={handleForgot} autoComplete="off">
                         <Form.Item
                             label="Email"
                             name="email"
@@ -48,26 +47,18 @@ export default function Login() {
                                 { type: "email", message: "Please enter a valid email!" },
                             ]}
                         >
-                            <Input placeholder="Enter your email" />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Password"
-                            name="password"
-                            rules={[{ required: true, message: "Please enter your password!" }]}
-                        >
-                            <Input.Password placeholder="Enter your password" />
+                            <Input placeholder=" Enter your email" />
                         </Form.Item>
 
                         <Form.Item>
                             <Button type="primary" htmlType="submit" className="w-full bg-[#0267FF]">
-                                Login
+                                Send reset link
                             </Button>
                         </Form.Item>
 
                         <div className="text-sm text-center">
-                            <Link href="/forgot-password" className="text-[#0267FF] hover:underline">
-                                Forgot password?
+                            <Link href="/" className="text-gray-700">
+                               back to login
                             </Link>
                         </div>
                     </Form>
