@@ -25,3 +25,15 @@ export async function getLecturers() {
 
     return res.json();
 }
+
+export async function getStudents() {
+    const res = await fetch(`${API_URL}/admin/students`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch students");
+    }
+    return res.json();
+}

@@ -51,7 +51,6 @@ const Dashboard = () => {
 
     return (
         <Layout>
-            {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
                     <div className="flex items-center justify-between">
@@ -85,7 +84,6 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* Lecturers Table */}
             <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-4 border-b space-y-3 sm:space-y-0">
                     <h2 className="text-xl font-semibold text-gray-900">Lecturers</h2>

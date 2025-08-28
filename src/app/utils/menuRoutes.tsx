@@ -1,9 +1,5 @@
 import {
     FaTachometerAlt,
-    FaClipboardCheck,
-    FaArchive,
-    FaUsersCog,
-    FaCog,
     FaBook,
     FaTasks,
     FaUserGraduate,
