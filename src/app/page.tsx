@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Form, Input, Button, message, Spin } from "antd";
 import { FaListCheck } from "react-icons/fa6";
-import { loginUser } from "@/app/apis/api";
+import { loginUser } from "@/app/services/auth";
 import Link from "next/link";
 
 export default function Login() {
@@ -14,9 +14,9 @@ export default function Login() {
         try {
             const data = await loginUser(values.email, values.password);
             messageApi.success("Login successful!");
-            console.log("User data:", data);
+            localStorage.setItem("user", JSON.stringify(data.user));
 
-            window.location.href = "/dashboard";
+            window.location.href = "/admin/dashboard";
         } catch (err: any) {
             messageApi.error(err.message || "Login failed");
         } finally {

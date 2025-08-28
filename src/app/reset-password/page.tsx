@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Form, Input, Button, message, Spin } from "antd";
 import { FaListCheck } from "react-icons/fa6";
-import { resetPassword } from "@/app/apis/api";
+import { resetPassword } from "@/app/services/auth";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 

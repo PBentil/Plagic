@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Form, Input, Button, message, Spin } from "antd";
 import { FaListCheck } from "react-icons/fa6";
 import Link from "next/link";
-import {forgotPassword} from "@/app/apis/api";
+import {forgotPassword} from "@/app/services/auth";
 
 export default function page() {
     const [loading, setLoading] = useState(false);
