@@ -15,8 +15,20 @@ export default function Login() {
             const data = await loginUser(values.email, values.password);
             messageApi.success("Login successful!");
             localStorage.setItem("user", JSON.stringify(data.user));
-
-            window.location.href = "/admin/dashboard";
+            switch (data.user.role) {
+                case "ADMIN":
+                    window.location.href = "/admin/dashboard";
+                    break;
+                case "LECTURER":
+                    window.location.href = "/lecturer/dashboard";
+                    break;
+                case "STUDENT":
+                    window.location.href = "/student/dashboard";
+                    break;
+                default:
+                    messageApi.warning("No valid role found. Redirecting to home.");
+                    window.location.href = "/";
+            }
         } catch (err: any) {
             messageApi.error(err.message || "Login failed");
         } finally {

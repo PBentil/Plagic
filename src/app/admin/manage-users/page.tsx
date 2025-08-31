@@ -1,20 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {getLecturers, getStudents} from "@/app/services/adminDashboard";
-import { Spin } from "antd";
+import { getLecturers, getStudents, addLecturer, addStudent } from "@/app/services/adminDashboard";
 import Layout from "@/app/components/Layout";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
 import CustomTable from "@/app/components/table";
 import type { ColumnsType } from "antd/es/table";
 import { FaPlus } from "react-icons/fa6";
+import { Modal, Form, Input, Select, message } from "antd";
+import { AxiosError } from "axios";
+
 
 interface Lecturer {
     id: string;
     name: string;
     email: string;
     phone: string;
-    department: string;
+    department: { id: number; name: string };
     qualification: string;
 }
 
@@ -23,48 +25,43 @@ interface Student {
     name: string;
     email: string;
     phone: string;
-    department: string;
+    department: { id: number; name: string };
 }
 
 const ManageUsers = () => {
     const [loading, setLoading] = useState(true);
     const [lecturers, setLecturers] = useState<Lecturer[]>([]);
     const [students, setStudents] = useState<Student[]>([]);
-    const [activeTab, setActiveTab] = useState<"lecturers" | "students">(
-        "lecturers"
-    );
+    const [activeTab, setActiveTab] = useState<"lecturers" | "students">("lecturers");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [form] = Form.useForm();
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    async function fetchData() {
+        setLoading(true);
+        try {
+            const lecturerList = await getLecturers();
+            setLecturers(lecturerList);
+            const studentsList = await getStudents();
+            setStudents(studentsList);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const lecturerList = await getLecturers();
-                setLecturers(lecturerList);
-                const studentsList = await getStudents();
-                setStudents(studentsList);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            } finally {
-                setLoading(false);
-            }
-        }
         fetchData();
     }, []);
 
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 text-white">
-                <Spin size="large" />
-                <p className="mt-4 text-lg font-semibold animate-pulse">
-                    Loading users...
-                </p>
-            </div>
-        );
-    }
     const lecturerColumns: ColumnsType<Lecturer> = [
         { title: "Name", dataIndex: "name", key: "name" },
         { title: "Email", dataIndex: "email", key: "email" },
         { title: "Phone", dataIndex: "phone", key: "phone" },
-        { title: "Department", dataIndex: "department", key: "department" },
+        { title: "Department", key: "department", render: (_, record) => record.department?.name || "N/A" },
         { title: "Qualification", dataIndex: "qualification", key: "qualification" },
     ];
 
@@ -72,19 +69,49 @@ const ManageUsers = () => {
         { title: "Name", dataIndex: "name", key: "name" },
         { title: "Email", dataIndex: "email", key: "email" },
         { title: "Phone", dataIndex: "phone", key: "phone" },
-        { title: "Department", dataIndex: "department", key: "department" },
+        { title: "Department", key: "department", render: (_, record) => record.department?.name || "N/A" },
     ];
+
+    const handleOk = async () => {
+        try {
+            const values = await form.validateFields();
+            setIsSubmitting(true);
+
+            if (activeTab === "lecturers") {
+                await addLecturer({ ...values, qualification: values.qualification }); // ✅ correct spelling
+                messageApi.success("Lecturer added successfully ✅");
+            } else {
+                await addStudent(values);
+                messageApi.success("Student added successfully ✅");
+            }
+
+            setIsModalOpen(false);
+            form.resetFields();
+            fetchData();
+        } catch (err: unknown) {
+            const axiosErr = err as AxiosError<{ message: string }>;
+            const backendMessage =
+                axiosErr.response?.data?.message ||
+                axiosErr.message ||
+                "Failed to add user or user already exists";
+
+            messageApi.error(backendMessage);
+            setIsModalOpen(false);
+            form.resetFields();
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <Layout>
-            <div className="flex flex-col  bg-gray-50 ">
-                <div className="flex items-center justify-between mb-6 ">
+            {contextHolder}
+            <div className="flex flex-col bg-gray-50">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
                     <div className="flex gap-2">
                         <button
                             className={`px-4 py-2 rounded-lg font-medium transition ${
-                                activeTab === "lecturers"
-                                    ? "bg-blue-600 text-white"
-                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                activeTab === "lecturers" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                             }`}
                             onClick={() => setActiveTab("lecturers")}
                         >
@@ -92,9 +119,7 @@ const ManageUsers = () => {
                         </button>
                         <button
                             className={`px-4 py-2 rounded-lg font-medium transition ${
-                                activeTab === "students"
-                                    ? "bg-blue-600 text-white"
-                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                activeTab === "students" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                             }`}
                             onClick={() => setActiveTab("students")}
                         >
@@ -102,7 +127,7 @@ const ManageUsers = () => {
                         </button>
                     </div>
 
-                    <div className="flex gap-3">
+                    <div className="flex flex-wrap gap-3">
                         <button className="px-4 py-2 bg-gray-200 text-black rounded-lg hover:bg-gray-300 flex items-center gap-2">
                             Filter by <CiFilter />
                         </button>
@@ -110,33 +135,65 @@ const ManageUsers = () => {
                             Bulk upload <IoCloudUploadOutline />
                         </button>
                         {activeTab === "lecturers" && (
-                            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+                            >
                                 Add Lecturer <FaPlus />
                             </button>
                         )}
                         {activeTab === "students" && (
-                            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+                            >
                                 Add Student <FaPlus />
                             </button>
                         )}
                     </div>
                 </div>
+
                 <div className="bg-white p-4 rounded-lg shadow">
                     {activeTab === "lecturers" ? (
-                        <CustomTable<Lecturer>
-                            columns={lecturerColumns}
-                            data={lecturers}
-                            loading={loading}
-                        />
+                        <CustomTable<Lecturer> columns={lecturerColumns} data={lecturers} loading={loading} />
                     ) : (
-                        <CustomTable<Student>
-                            columns={studentColumns}
-                            data={students}
-                            loading={loading}
-                        />
+                        <CustomTable<Student> columns={studentColumns} data={students} loading={loading} />
                     )}
                 </div>
             </div>
+            <Modal
+                title={activeTab === "lecturers" ? "Add Lecturer" : "Add Student"}
+                open={isModalOpen}
+                onOk={handleOk}
+                confirmLoading={isSubmitting}
+                onCancel={() => setIsModalOpen(false)}
+                okText="Add"
+            >
+                <Form form={form} layout="vertical">
+                    <Form.Item name="name" label="Full Name" rules={[{ required: true, message: "Please enter name" }]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="email" label="Email" rules={[{ required: true, type: "email" }]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
+                        <Input />
+                    </Form.Item>
+                    {activeTab === "lecturers" && (
+                        <Form.Item name="qualificaion" label="Qualification" rules={[{ required: true }]}>
+                            <Input />
+                        </Form.Item>
+                    )}
+                    <Form.Item name="departmentId" label="Department" rules={[{ required: true }]}>
+                        <Select placeholder="Select department">
+                            <Select.Option value={1}>Computer Science</Select.Option>
+                            <Select.Option value={2}>Mathematics</Select.Option>
+                            <Select.Option value={3}>Mechanical Engineering</Select.Option>
+                            <Select.Option value={4}>Civil Engineering</Select.Option>
+                        </Select>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </Layout>
     );
 };
