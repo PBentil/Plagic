@@ -1,28 +1,25 @@
 import React from "react";
 import { Table } from "antd";
-import type { TableProps, ColumnsType } from "antd/es/table";
+import type { TableProps } from "antd/es/table";
 
-interface CustomTableProps<T> {
-    columns: ColumnsType<T>;
+interface CustomTableProps<T> extends TableProps<T> {
     data: T[];
-    loading?: boolean;
-    rowKey?: string;
 }
 
 function CustomTable<T extends object>({
-                                           columns,
                                            data,
-                                           loading = false,
                                            rowKey = "id",
+                                           pagination = { pageSize: 10 },
+                                           bordered = false,
+                                           ...rest
                                        }: CustomTableProps<T>) {
     return (
-        <Table<T>
-            columns={columns}
+        <Table
             dataSource={data}
-            loading={loading}
             rowKey={rowKey}
-            pagination={{ pageSize: 10 }}
-            bordered
+            pagination={pagination}
+            bordered={bordered}
+            {...rest}
         />
     );
 }

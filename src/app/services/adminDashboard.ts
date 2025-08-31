@@ -37,3 +37,42 @@ export async function getStudents() {
     }
     return res.json();
 }
+
+export async function addStudent(studentData: {
+    name: string;
+    email: string;
+    phone: string;
+    departmentId: number;
+}) {
+    const res = await fetch(`${API_URL}/admin/add-student`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(studentData),
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to add student");
+    }
+
+    return res.json();
+}
+
+export async function addLecturer(lecturerData: {
+    name: string;
+    email: string;
+    phone: string;
+    qualification: string;
+    departmentId: number;
+}) {
+    const res = await fetch(`${API_URL}/admin/add-lecturer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(lecturerData),
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to add lecturer");
+    }
+
+    return res.json();
+}
