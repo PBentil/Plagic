@@ -12,7 +12,9 @@ interface Lecturer {
     name: string;
     email: string;
     phone: string;
-    department: string;
+    department: {
+        name: string;
+    };
     qualification: string;
 }
 
