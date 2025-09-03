@@ -15,7 +15,7 @@ import {AiOutlineSetting} from "react-icons/ai";
 export const adminMenu = [
     { label: "Dashboard", path: "/admin/dashboard", icon: <MdOutlineDashboard /> },
     { label: "Plagiarism Checker", path: "/admin/", icon: <MdOutlinePlagiarism />},
-    {label: "Academic divisions", path: "/admin/academic/academic", icon: <IoBookOutline />},
+    {label: "Academic divisions", path: "/admin/academic-divisions", icon: <IoBookOutline />},
     { label: "Archive", path: "/admin/archive", icon: <BsDatabase /> },
     { label: "Manage Users", path: "/admin/manage-users", icon: <PiUsersThree /> },
     { label: "Accounting Settings", path: "/admin/", icon: <AiOutlineSetting /> },
