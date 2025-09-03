@@ -78,11 +78,11 @@ const ManageUsers = () => {
             setIsSubmitting(true);
 
             if (activeTab === "lecturers") {
-                await addLecturer({ ...values, qualification: values.qualification }); // ✅ correct spelling
-                messageApi.success("Lecturer added successfully ✅");
+                await addLecturer({ ...values, qualification: values.qualification });
+                messageApi.success("Lecturer added successfully ");
             } else {
                 await addStudent(values);
-                messageApi.success("Student added successfully ✅");
+                messageApi.success("Student added successfully ");
             }
 
             setIsModalOpen(false);
@@ -180,7 +180,7 @@ const ManageUsers = () => {
                         <Input />
                     </Form.Item>
                     {activeTab === "lecturers" && (
-                        <Form.Item name="qualificaion" label="Qualification" rules={[{ required: true }]}>
+                        <Form.Item name="qualification" label="Qualification" rules={[{ required: true }]}>
                             <Input />
                         </Form.Item>
                     )}
