@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Users, GraduationCap } from "lucide-react";
+import { GraduationCap, User, Building, CheckSquare } from "lucide-react";
 import { getCounts, getLecturers } from "@/app/services/adminDashboard";
 import type { ColumnsType } from "antd/es/table";
 import Layout from "@/app/components/Layout";
@@ -49,6 +49,10 @@ const StatCard = ({
 const Dashboard = () => {
     const [studentCount, setStudentCount] = useState<number>(0);
     const [lecturerCount, setLecturerCount] = useState<number>(0);
+    const [facultyCount, setFacultyCount] = useState<number>(0);
+    const [checksCount, setChecksCount] = useState<number>(0);
+
+
     const [lecturers, setLecturers] = useState<Lecturer[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -58,6 +62,8 @@ const Dashboard = () => {
                 const counts = await getCounts();
                 setStudentCount(counts.students);
                 setLecturerCount(counts.lecturers);
+                setFacultyCount(counts.faculties);
+                setChecksCount(counts.checks);
 
                 const lecturerList = await getLecturers();
                 setLecturers(lecturerList);
@@ -89,21 +95,31 @@ const Dashboard = () => {
 
     return (
         <Layout>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4  sm:gap-6 mb-6 sm:mb-8">
                 <StatCard
                     title="Total Students"
                     value={studentCount}
-                    icon={<GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />}
-                    iconBg="bg-blue-100"
-                    iconColor="text-blue-600"
-                />
+                    icon={<GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600"/>}
+                    iconBg="bg-blue-100" iconColor={"text-blue-600"}             />
+
                 <StatCard
                     title="Total Lecturers"
                     value={lecturerCount}
-                    icon={<Users className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600" />}
-                    iconBg="bg-purple-100"
-                    iconColor="text-purple-600"
-                />
+                    icon={<User className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600"/>}
+                    iconBg="bg-purple-100" iconColor={"text-purple-600"}                />
+
+                <StatCard
+                    title="Total Faculties"
+                    value={facultyCount}
+                    icon={<Building className="h-6 w-6 sm:h-8 sm:w-8 text-green-600"/>}
+                    iconBg="bg-green-100" iconColor={"text-green-600"}                />
+
+                <StatCard
+                    title="Total Checks"
+                    value={checksCount}
+                    icon={<CheckSquare className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600"/>}
+                    iconBg="bg-orange-100" iconColor={"text-orange-600"}                />
+
             </div>
 
             <div className="bg-white rounded-lg shadow-sm border">
