@@ -86,7 +86,7 @@ const Sidebar: React.FC = () => {
                         <ul className="space-y-2 lg:space-y-4">
                             {menuItems.length > 0 ? (
                                 menuItems.map((item) => (
-                                    <li key={item.path}>
+                                    <li key={item.label}>
                                         <Link
                                             href={item.path}
                                             onClick={() => setIsMobileMenuOpen(false)}
