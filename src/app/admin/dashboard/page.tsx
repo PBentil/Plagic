@@ -31,7 +31,7 @@ const StatCard = ({
     iconBg: string;
     iconColor: string;
 }) => (
-    <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+    <div className="bg-white rounded-lg shadow-sm  p-4 sm:p-6">
         <div className="flex items-center justify-between">
             <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
@@ -122,8 +122,8 @@ const Dashboard = () => {
 
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm border">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-4 border-b space-y-3 sm:space-y-0">
+            <div className="bg-white rounded-lg shadow-sm ">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-4  space-y-3 sm:space-y-0">
                     <h2 className="text-xl font-semibold text-gray-900">Lecturers</h2>
                     <Link
                         href="/admin/manage-users"

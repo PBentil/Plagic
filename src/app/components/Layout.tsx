@@ -10,6 +10,12 @@ interface User {
     role: string;
 }
 
+interface MenuItem {
+    key: string;
+    label: string;
+    path: string;
+}
+
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
@@ -26,13 +32,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <div className="h-screen bg-gray-50 flex">
+        <div className="flex h-screen bg-gray-50 overflow-hidden">
             <Sidebar menuItems={menuItems} />
 
-            <div className="flex flex-col w-full lg:ml-0">
-                <div className="lg:hidden h-16" />
+            <div className="flex flex-col flex-1 overflow-hidden">
                 <Topbar />
-                <main className="flex-1 p-4 lg:p-5 mx-auto w-full max-w-7xl">
+
+                <main
+                    className="flex-1 overflow-y-auto px-3 sm:px-5 py-4 sm:py-6 w-full max-w-7xl mx-auto"
+                    style={{ scrollBehavior: "smooth" }}
+                >
                     {children}
                 </main>
             </div>
