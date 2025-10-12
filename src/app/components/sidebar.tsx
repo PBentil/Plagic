@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FaListCheck } from "react-icons/fa6";
 import { TbLogout2 } from "react-icons/tb";
 import { HiMenu, HiX } from "react-icons/hi";
@@ -16,6 +17,7 @@ interface MenuItem {
 const Sidebar: React.FC = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+    const pathname = usePathname(); // ✅ Detect current route
 
     useEffect(() => {
         try {
@@ -46,7 +48,6 @@ const Sidebar: React.FC = () => {
 
     return (
         <>
-            {/* Mobile toggle button */}
             <button
                 onClick={toggleMobileMenu}
                 className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 transition-colors"
@@ -55,7 +56,6 @@ const Sidebar: React.FC = () => {
                 {isMobileMenuOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
             </button>
 
-            {/* Overlay for mobile */}
             {isMobileMenuOpen && (
                 <div
                     className="lg:hidden fixed inset-0 z-30 bg-black bg-opacity-50"
@@ -63,7 +63,6 @@ const Sidebar: React.FC = () => {
                 />
             )}
 
-            {/* Sidebar container */}
             <aside
                 className={`
           fixed lg:static inset-y-0 left-0 z-40
@@ -75,28 +74,40 @@ const Sidebar: React.FC = () => {
         `}
             >
                 <div>
-                    {/* Logo/Header */}
                     <div className="flex items-center text-primary gap-2 mb-6 px-4">
                         <FaListCheck className="text-[#0267FF] text-2xl flex-shrink-0" />
                         <h2 className="text-xl font-semibold truncate">PLAGICHECKER</h2>
                     </div>
 
-                    {/* Navigation */}
                     <nav className="flex-1">
                         <ul className="space-y-2 lg:space-y-4">
                             {menuItems.length > 0 ? (
-                                menuItems.map((item) => (
-                                    <li key={item.label}>
-                                        <Link
-                                            href={item.path}
-                                            onClick={() => setIsMobileMenuOpen(false)}
-                                            className="flex items-center gap-3 px-4 py-3 lg:py-2 rounded-xl hover:bg-[#0267FF] hover:text-white transition-colors group"
-                                        >
-                                            <span className="text-xl flex-shrink-0">{item.icon}</span>
-                                            <span className="truncate">{item.label}</span>
-                                        </Link>
-                                    </li>
-                                ))
+                                menuItems.map((item) => {
+                                    const isActive = pathname === item.path;
+                                    return (
+                                        <li key={item.label}>
+                                            <Link
+                                                href={item.path}
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className={`flex items-center gap-3 px-4 py-3 lg:py-2 rounded-xl transition-colors group
+                          ${
+                                                    isActive
+                                                        ? "bg-[#0267FF] text-white shadow-md"
+                                                        : "hover:bg-[#0267FF] hover:text-white"
+                                                }`}
+                                            >
+                        <span
+                            className={`text-xl flex-shrink-0 transition-transform ${
+                                isActive ? "scale-110" : "group-hover:scale-105"
+                            }`}
+                        >
+                          {item.icon}
+                        </span>
+                                                <span className="truncate">{item.label}</span>
+                                            </Link>
+                                        </li>
+                                    );
+                                })
                             ) : (
                                 <li className="px-4 text-gray-500 text-sm">No menu available</li>
                             )}
@@ -104,7 +115,6 @@ const Sidebar: React.FC = () => {
                     </nav>
                 </div>
 
-                {/* Logout */}
                 <div className="mt-6 px-4 border-t border-gray-400 pt-4">
                     <Link
                         href="/"
