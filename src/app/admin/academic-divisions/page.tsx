@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {getFaculties, addFaculty, addDepartment, updateFaculty, deleteFaculty, deleteDepartment, updateDepartment} from "@/app/services/adminDashboard";
+import { getFaculties, addFaculty, addDepartment, updateFaculty, deleteFaculty, deleteDepartment, updateDepartment } from "@/app/services/admin.services";
 import Layout from "@/app/components/Layout";
 import CustomTable from "@/app/components/table";
 import type { ColumnsType } from "antd/es/table";

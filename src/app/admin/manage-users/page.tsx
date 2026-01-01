@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getLecturers, getStudents, addLecturer, addStudent } from "@/app/services/adminDashboard";
+import { getLecturers, getStudents, addLecturer, addStudent } from "@/app/services/admin.services";
 import Layout from "@/app/components/Layout";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
@@ -110,17 +110,15 @@ const ManageUsers = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
                     <div className="flex gap-2">
                         <button
-                            className={`px-4 py-2 rounded-lg font-medium transition ${
-                                activeTab === "lecturers" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                            }`}
+                            className={`px-4 py-2 rounded-lg font-medium transition ${activeTab === "lecturers" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                }`}
                             onClick={() => setActiveTab("lecturers")}
                         >
                             Lecturers
                         </button>
                         <button
-                            className={`px-4 py-2 rounded-lg font-medium transition ${
-                                activeTab === "students" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                            }`}
+                            className={`px-4 py-2 rounded-lg font-medium transition ${activeTab === "students" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                }`}
                             onClick={() => setActiveTab("students")}
                         >
                             Students

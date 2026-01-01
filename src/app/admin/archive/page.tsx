@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Layout from "@/app/components/Layout";
-import { Modal, Form, Input, Select, message, Upload , Button} from "antd";
+import { Modal, Form, Input, Select, message, Upload, Button } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import CustomTable from "@/app/components/table";
 import type { ColumnsType } from "antd/es/table";
-import {getFaculties} from "@/app/services/adminDashboard";
-import {getAllArchives, getArchivesByFaculty, uploadArchive} from "@/app/admin/archive/services/archiveServices";
+import { getFaculties } from "@/app/services/admin.services";
+import { getAllArchives, getArchivesByFaculty, uploadArchive } from "@/app/admin/archive/services/archive.services";
 
 const { Dragger } = Upload;
 
@@ -114,7 +114,7 @@ const ArchivePage = () => {
             }
 
             const formData = new FormData();
-            formData.append("file", file); // 👈 send actual file blob
+            formData.append("file", file); 
             formData.append("facultyId", values.facultyId);
             formData.append("title", values.title);
             formData.append("description", values.description);
@@ -125,7 +125,7 @@ const ArchivePage = () => {
             messageApi.success("File uploaded successfully!");
             setIsModalOpen(false);
             form.resetFields();
-            fetchData(); // reload archives
+            fetchData();
         } catch (err) {
             console.error("Upload failed:", err);
             messageApi.error("Upload failed. Please try again.");
@@ -139,24 +139,23 @@ const ArchivePage = () => {
             {contextHolder}
             <div className="flex flex-col bg-gray-50">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
-                    <div>
+                    <div className="text-black">
                         <h1 className="text-2xl">Database</h1>
-                        <p>Upload Past Project works here</p>
+                        <p className="text-gray-500">Upload Past Project works here</p>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                        <Select
-                            placeholder="Filter by Faculty"
-                            className="w-48"
-                            onChange={handleFilterChange}
-                            allowClear
-                            value={selectedFaculty ?? undefined}
-                        >
-                            {faculties.map((f) => (
-                                <Select.Option key={f.id} value={f.id}>
-                                    {f.name}
-                                </Select.Option>
-                            ))}
-                        </Select>
+                    <Select
+                        placeholder="Filter by Faculty"
+                        className="w-48"
+                        onChange={handleFilterChange}
+                        allowClear
+                        value={selectedFaculty ?? undefined}
+                        options={faculties.map((f) => ({
+                            label: f.name,
+                            value: f.id,
+                        }))}
+                        />
+
 
                         <button
                             onClick={() => setIsModalOpen(true)}
@@ -199,15 +198,16 @@ const ArchivePage = () => {
                         name="facultyId"
                         label="Faculty"
                         rules={[{ required: true, message: "Please select a faculty" }]}
-                    >
-                        <Select placeholder="Select faculty">
-                            {faculties.map((f) => (
-                                <Select.Option key={f.id} value={f.id}>
-                                    {f.name}
-                                </Select.Option>
-                            ))}
-                        </Select>
+                        >
+                        <Select
+                            placeholder="Select faculty"
+                            options={faculties.map((f) => ({
+                            label: f.name,
+                            value: f.id,
+                            }))}
+                        />
                     </Form.Item>
+
 
                     <Form.Item
                         name="file"
@@ -219,10 +219,10 @@ const ArchivePage = () => {
                         <Dragger
                             multiple={false}
                             accept=".pdf"
-                            beforeUpload={() => false} // Prevent AntD auto-upload
+                            beforeUpload={() => false} 
                         >
 
-                        <p className="ant-upload-drag-icon">
+                            <p className="ant-upload-drag-icon">
                                 <InboxOutlined />
                             </p>
                             <p className="ant-upload-text">
