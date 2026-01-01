@@ -19,7 +19,6 @@ const Topbar: React.FC = () => {
 
     return (
         <div className="flex flex-col sm:flex-row items-center justify-between bg-white shadow px-4 sm:px-6 py-3 gap-3">
-            {/* Search */}
             <div className="w-full sm:w-1/2">
                 <input
                     type="text"

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { GraduationCap, User, Building, CheckSquare } from "lucide-react";
-import { getCounts, getLecturers } from "@/app/services/adminDashboard";
+import { getCounts, getLecturers } from "@/app/services/admin.services";
 import type { ColumnsType } from "antd/es/table";
 import Layout from "@/app/components/Layout";
 import Table from "@/app/components/table";
@@ -19,12 +19,12 @@ interface Lecturer {
 }
 
 const StatCard = ({
-                      title,
-                      value,
-                      icon,
-                      iconBg,
-                      iconColor,
-                  }: {
+    title,
+    value,
+    icon,
+    iconBg,
+    iconColor,
+}: {
     title: string;
     value: number;
     icon: React.ReactNode;
@@ -99,26 +99,26 @@ const Dashboard = () => {
                 <StatCard
                     title="Total Students"
                     value={studentCount}
-                    icon={<GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600"/>}
-                    iconBg="bg-blue-100" iconColor={"text-blue-600"}             />
+                    icon={<GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />}
+                    iconBg="bg-blue-100" iconColor={"text-blue-600"} />
 
                 <StatCard
                     title="Total Lecturers"
                     value={lecturerCount}
-                    icon={<User className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600"/>}
-                    iconBg="bg-purple-100" iconColor={"text-purple-600"}                />
+                    icon={<User className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600" />}
+                    iconBg="bg-purple-100" iconColor={"text-purple-600"} />
 
                 <StatCard
                     title="Total Faculties"
                     value={facultyCount}
-                    icon={<Building className="h-6 w-6 sm:h-8 sm:w-8 text-green-600"/>}
-                    iconBg="bg-green-100" iconColor={"text-green-600"}                />
+                    icon={<Building className="h-6 w-6 sm:h-8 sm:w-8 text-green-600" />}
+                    iconBg="bg-green-100" iconColor={"text-green-600"} />
 
                 <StatCard
                     title="Total Checks"
                     value={checksCount}
-                    icon={<CheckSquare className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600"/>}
-                    iconBg="bg-orange-100" iconColor={"text-orange-600"}                />
+                    icon={<CheckSquare className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600" />}
+                    iconBg="bg-orange-100" iconColor={"text-orange-600"} />
 
             </div>
 
