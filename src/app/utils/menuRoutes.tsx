@@ -18,7 +18,7 @@ export const adminMenu = [
     {label: "Academic divisions", path: "/admin/academic-divisions", icon: <IoBookOutline />},
     { label: "Archive", path: "/admin/archive", icon: <BsDatabase /> },
     { label: "Manage Users", path: "/admin/manage-users", icon: <PiUsersThree /> },
-    { label: "Accounting Settings", path: "/admin/", icon: <AiOutlineSetting /> },
+    { label: "Accounting Settings", path: "/account-settings", icon: <AiOutlineSetting /> },
 ];
 
 export const studentMenu = [
@@ -26,6 +26,8 @@ export const studentMenu = [
     { label: "My Courses", path: "/student/courses", icon: <FaBook /> },
     { label: "Assignments", path: "/student/assignments", icon: <FaTasks /> },
     { label: "Profile", path: "/student/profile", icon: <FaUserGraduate /> },
+    { label: "Accounting Settings", path: "/account-settings", icon: <AiOutlineSetting /> },
+
 ];
 
 export const lecturerMenu = [
@@ -33,4 +35,6 @@ export const lecturerMenu = [
     { label: "My Classes", path: "/lecturer/classes", icon: <FaChalkboardTeacher /> },
     { label: "Assignments", path: "/lecturer/assignments", icon: <FaTasks /> },
     { label: "Profile", path: "/lecturer/profile", icon: <FaUser /> },
+    { label: "Accounting Settings", path: "/account-settings", icon: <AiOutlineSetting /> },
+
 ];
