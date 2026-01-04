@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 const AUTH_PAGES = ["/", "/forgot-password", "/reset-password"];
 const ROLE_ROUTES: Record<string, string[]> = {
-  ADMIN: ["/admin"],
-  LECTURER: ["/dashboard", "/checker", "/archive"],
-  STUDENT: ["/dashboard", "/checker"],
+  ADMIN: ["/admin", "/account-settings"],
+  LECTURER: ["/dashboard", "/checker", "/archive", "/account-settings"],
+  STUDENT: ["/dashboard", "/checker", "/account-settings"],
 };
 
 function decodeJWT(token: string) {
@@ -65,8 +65,10 @@ export const config = {
     "/dashboard/:path*",
     "/checker/:path*",
     "/archive/:path*",
+    "/account-settings",
     "/",
     "/forgot-password",
     "/reset-password",
   ],
 };
+

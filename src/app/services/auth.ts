@@ -27,3 +27,10 @@ export function resetPassword(payload: {
     body: JSON.stringify(payload),
   });
 }
+
+export function logoutUser() {
+  return apiFetch("/auth/logout", {
+    method: "POST",
+    auth: true,
+  });
+}
