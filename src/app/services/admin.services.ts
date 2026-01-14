@@ -97,3 +97,9 @@ export function deleteDepartment(departmentId: number) {
     method: "DELETE",
   });
 }
+
+export function getDepartments() {
+  return apiFetch("/admin/departments", {
+    method: "GET",
+  });
+}
