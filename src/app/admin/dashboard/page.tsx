@@ -8,15 +8,20 @@ import Layout from "@/app/components/Layout";
 import Table from "@/app/components/table";
 
 interface Lecturer {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
+    id: number;
+    qualification: string;
     department: {
+        id: number;
         name: string;
     };
-    qualification: string;
+    user: {
+        id: string;
+        name: string;
+        email: string;
+        phone: string;
+    };
 }
+
 
 const StatCard = ({
     title,
@@ -86,12 +91,33 @@ const Dashboard = () => {
     }
 
     const lecturerColumns: ColumnsType<Lecturer> = [
-        { title: "Name", dataIndex: "name", key: "name" },
-        { title: "Email", dataIndex: "email", key: "email" },
-        { title: "Phone", dataIndex: "phone", key: "phone" },
-        { title: "Department", key: "department", render: (_, record) => record.department?.name || "N/A" },
-        { title: "Qualification", dataIndex: "qualification", key: "qualification" },
+        {
+            title: "Name",
+            key: "name",
+            render: (_, record) => record.user?.name || "N/A",
+        },
+        {
+            title: "Email",
+            key: "email",
+            render: (_, record) => record.user?.email || "N/A",
+        },
+        {
+            title: "Phone",
+            key: "phone",
+            render: (_, record) => record.user?.phone || "N/A",
+        },
+        {
+            title: "Department",
+            key: "department",
+            render: (_, record) => record.department?.name || "N/A",
+        },
+        {
+            title: "Qualification",
+            dataIndex: "qualification",
+            key: "qualification",
+        },
     ];
+
 
     return (
         <Layout>

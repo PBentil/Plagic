@@ -11,12 +11,18 @@ import { Modal, Form, Input, Select, message } from "antd";
 import { AxiosError } from "axios";
 
 interface Lecturer {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    department: { id: number; name: string };
+    id: number;
     qualification: string;
+    department: {
+        id: number;
+        name: string;
+    };
+    user: {
+        id: string;
+        name: string;
+        email: string;
+        phone: string;
+    };
 }
 
 interface Student {
@@ -81,12 +87,33 @@ const ManageUsers = () => {
     }, []);
 
     const lecturerColumns: ColumnsType<Lecturer> = [
-        { title: "Name", dataIndex: "name", key: "name" },
-        { title: "Email", dataIndex: "email", key: "email" },
-        { title: "Phone", dataIndex: "phone", key: "phone" },
-        { title: "Department", key: "department", render: (_, record) => record.department?.name || "N/A" },
-        { title: "Qualification", dataIndex: "qualification", key: "qualification" },
+        {
+            title: "Name",
+            key: "name",
+            render: (_, record) => record.user?.name || "N/A",
+        },
+        {
+            title: "Email",
+            key: "email",
+            render: (_, record) => record.user?.email || "N/A",
+        },
+        {
+            title: "Phone",
+            key: "phone",
+            render: (_, record) => record.user?.phone || "N/A",
+        },
+        {
+            title: "Department",
+            key: "department",
+            render: (_, record) => record.department?.name || "N/A",
+        },
+        {
+            title: "Qualification",
+            dataIndex: "qualification",
+            key: "qualification",
+        },
     ];
+
 
     const studentColumns: ColumnsType<Student> = [
         { title: "Name", dataIndex: "name", key: "name" },
@@ -101,7 +128,6 @@ const ManageUsers = () => {
             setIsSubmitting(true);
 
             if (activeTab === "lecturers") {
-                // Only send the fields backend expects
                 const payload = {
                     name: values.name,
                     email: values.email,

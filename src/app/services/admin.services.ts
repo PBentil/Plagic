@@ -103,3 +103,21 @@ export function getDepartments() {
     method: "GET",
   });
 }
+
+export function getCourses() {
+  return apiFetch("/courses", {
+    method: "GET",
+  });
+}
+
+export function addCourse(courseData: {
+  courseCode: string;
+  courseName: string;
+  description?: string;
+  primaryLecturerId: string;
+}) {
+  return apiFetch("/courses", {
+    method: "POST",
+    body: JSON.stringify(courseData),
+  });
+}
