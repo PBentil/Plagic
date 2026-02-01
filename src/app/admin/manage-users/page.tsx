@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getLecturers, getStudents, addLecturer, addStudent } from "@/app/services/admin.services";
+import {getLecturers, getStudents, addLecturer, addStudent, getDepartments} from "@/app/services/admin.services";
 import Layout from "@/app/components/Layout";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
@@ -10,14 +10,19 @@ import { FaPlus } from "react-icons/fa6";
 import { Modal, Form, Input, Select, message } from "antd";
 import { AxiosError } from "axios";
 
-
 interface Lecturer {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    department: { id: number; name: string };
+    id: number;
     qualification: string;
+    department: {
+        id: number;
+        name: string;
+    };
+    user: {
+        id: string;
+        name: string;
+        email: string;
+        phone: string;
+    };
 }
 
 interface Student {
@@ -36,16 +41,26 @@ const ManageUsers = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [form] = Form.useForm();
-
     const [messageApi, contextHolder] = message.useMessage();
+    const [departments, setDepartments] = useState<{ id: number; name: string }[]>([]);
+
 
     async function fetchData() {
         setLoading(true);
         try {
             const lecturerList = await getLecturers();
             setLecturers(lecturerList);
+
             const studentsList = await getStudents();
-            setStudents(studentsList);
+            // Map the API response to match our Student interface
+            const mappedStudents = studentsList.map((s: any) => ({
+                id: s.id.toString(),
+                name: s.user.name,
+                email: s.user.email,
+                phone: s.user.phone,
+                department: s.department,
+            }));
+            setStudents(mappedStudents);
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
@@ -57,13 +72,48 @@ const ManageUsers = () => {
         fetchData();
     }, []);
 
+    async function fetchDepartments() {
+        try {
+            const depts = await getDepartments();
+            setDepartments(depts);
+        } catch (err) {
+            console.error("Error fetching departments:", err);
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+        fetchDepartments();
+    }, []);
+
     const lecturerColumns: ColumnsType<Lecturer> = [
-        { title: "Name", dataIndex: "name", key: "name" },
-        { title: "Email", dataIndex: "email", key: "email" },
-        { title: "Phone", dataIndex: "phone", key: "phone" },
-        { title: "Department", key: "department", render: (_, record) => record.department?.name || "N/A" },
-        { title: "Qualification", dataIndex: "qualification", key: "qualification" },
+        {
+            title: "Name",
+            key: "name",
+            render: (_, record) => record.user?.name || "N/A",
+        },
+        {
+            title: "Email",
+            key: "email",
+            render: (_, record) => record.user?.email || "N/A",
+        },
+        {
+            title: "Phone",
+            key: "phone",
+            render: (_, record) => record.user?.phone || "N/A",
+        },
+        {
+            title: "Department",
+            key: "department",
+            render: (_, record) => record.department?.name || "N/A",
+        },
+        {
+            title: "Qualification",
+            dataIndex: "qualification",
+            key: "qualification",
+        },
     ];
+
 
     const studentColumns: ColumnsType<Student> = [
         { title: "Name", dataIndex: "name", key: "name" },
@@ -78,11 +128,24 @@ const ManageUsers = () => {
             setIsSubmitting(true);
 
             if (activeTab === "lecturers") {
-                await addLecturer({ ...values, qualification: values.qualification });
-                messageApi.success("Lecturer added successfully ");
+                const payload = {
+                    name: values.name,
+                    email: values.email,
+                    phone: values.phone,
+                    qualification: values.qualification,
+                    departmentId: values.departmentId,
+                };
+                await addLecturer(payload);
+                messageApi.success("Lecturer added successfully");
             } else {
-                await addStudent(values);
-                messageApi.success("Student added successfully ");
+                const payload = {
+                    name: values.name,
+                    email: values.email,
+                    phone: values.phone,
+                    departmentId: values.departmentId,
+                };
+                await addStudent(payload);
+                messageApi.success("Student added successfully");
             }
 
             setIsModalOpen(false);
@@ -110,15 +173,17 @@ const ManageUsers = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
                     <div className="flex gap-2">
                         <button
-                            className={`px-4 py-2 rounded-lg font-medium transition ${activeTab === "lecturers" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                                }`}
+                            className={`px-4 py-2 rounded-lg font-medium transition ${
+                                activeTab === "lecturers" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            }`}
                             onClick={() => setActiveTab("lecturers")}
                         >
                             Lecturers
                         </button>
                         <button
-                            className={`px-4 py-2 rounded-lg font-medium transition ${activeTab === "students" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                                }`}
+                            className={`px-4 py-2 rounded-lg font-medium transition ${
+                                activeTab === "students" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            }`}
                             onClick={() => setActiveTab("students")}
                         >
                             Students
@@ -159,6 +224,7 @@ const ManageUsers = () => {
                     )}
                 </div>
             </div>
+
             <Modal
                 title={activeTab === "lecturers" ? "Add Lecturer" : "Add Student"}
                 open={isModalOpen}
@@ -184,12 +250,14 @@ const ManageUsers = () => {
                     )}
                     <Form.Item name="departmentId" label="Department" rules={[{ required: true }]}>
                         <Select placeholder="Select department">
-                            <Select.Option value={1}>Computer Science</Select.Option>
-                            <Select.Option value={2}>Mathematics</Select.Option>
-                            <Select.Option value={3}>Mechanical Engineering</Select.Option>
-                            <Select.Option value={4}>Civil Engineering</Select.Option>
+                            {departments.map((dept) => (
+                                <Select.Option key={dept.id} value={dept.id}>
+                                    {dept.name}
+                                </Select.Option>
+                            ))}
                         </Select>
                     </Form.Item>
+
                 </Form>
             </Modal>
         </Layout>
