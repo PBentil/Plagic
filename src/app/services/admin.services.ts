@@ -7,7 +7,7 @@ export function getCounts() {
 }
 
 export function getLecturers() {
-  return apiFetch("/admin/lecturers", {
+  return apiFetch("/admin/lecturer", {
     method: "GET",
   });
 }

@@ -37,7 +37,7 @@ const ManageUsers = () => {
     const [loading, setLoading] = useState(true);
     const [lecturers, setLecturers] = useState<Lecturer[]>([]);
     const [students, setStudents] = useState<Student[]>([]);
-    const [activeTab, setActiveTab] = useState<"lecturers" | "students">("lecturers");
+    const [activeTab, setActiveTab] = useState<"lecturer" | "students">("lecturer");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [form] = Form.useForm();
@@ -127,7 +127,7 @@ const ManageUsers = () => {
             const values = await form.validateFields();
             setIsSubmitting(true);
 
-            if (activeTab === "lecturers") {
+            if (activeTab === "lecturer") {
                 const payload = {
                     name: values.name,
                     email: values.email,
@@ -174,9 +174,9 @@ const ManageUsers = () => {
                     <div className="flex gap-2">
                         <button
                             className={`px-4 py-2 rounded-lg font-medium transition ${
-                                activeTab === "lecturers" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                activeTab === "lecturer" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                             }`}
-                            onClick={() => setActiveTab("lecturers")}
+                            onClick={() => setActiveTab("lecturer")}
                         >
                             Lecturers
                         </button>
@@ -197,7 +197,7 @@ const ManageUsers = () => {
                         <button className="px-4 py-2 text-black bg-gray-200 rounded-lg hover:bg-gray-300 flex items-center gap-2">
                             Bulk upload <IoCloudUploadOutline />
                         </button>
-                        {activeTab === "lecturers" && (
+                        {activeTab === "lecturer" && (
                             <button
                                 onClick={() => setIsModalOpen(true)}
                                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
@@ -217,7 +217,7 @@ const ManageUsers = () => {
                 </div>
 
                 <div className="bg-white p-4 rounded-lg shadow">
-                    {activeTab === "lecturers" ? (
+                    {activeTab === "lecturer" ? (
                         <CustomTable<Lecturer> columns={lecturerColumns} data={lecturers} loading={loading} />
                     ) : (
                         <CustomTable<Student> columns={studentColumns} data={students} loading={loading} />
@@ -226,7 +226,7 @@ const ManageUsers = () => {
             </div>
 
             <Modal
-                title={activeTab === "lecturers" ? "Add Lecturer" : "Add Student"}
+                title={activeTab === "lecturer" ? "Add Lecturer" : "Add Student"}
                 open={isModalOpen}
                 onOk={handleOk}
                 confirmLoading={isSubmitting}
@@ -243,7 +243,7 @@ const ManageUsers = () => {
                     <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
                         <Input />
                     </Form.Item>
-                    {activeTab === "lecturers" && (
+                    {activeTab === "lecturer" && (
                         <Form.Item name="qualification" label="Qualification" rules={[{ required: true }]}>
                             <Input />
                         </Form.Item>
