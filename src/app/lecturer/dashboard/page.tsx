@@ -8,7 +8,6 @@ import type { ColumnsType } from "antd/es/table";
 import {getMyLecturerCourses, getMyLecturerSchedules} from "@/app/lecturer/services/lectures.services";
 
 
-/* ================= TYPES ================= */
 interface Course {
     id: number;
     courseCode: string;
