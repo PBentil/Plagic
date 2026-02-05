@@ -34,7 +34,7 @@ export const studentMenu = [
 export const lecturerMenu = [
     { label: "Dashboard", path: "/lecturer/dashboard", icon: <MdOutlineDashboard  /> },
     { label: "My Classes", path: "/lecturer/courses", icon: <FaChalkboardTeacher /> },
-    { label: "Assignments", path: "/lecturer/assignments", icon: <FaTasks /> },
+    { label: "Assignments", path: "/lecturer/courses/${record.id}/assignments", icon: <FaTasks /> },
     { label: "Accounting Settings", path: "/account-settings", icon: <AiOutlineSetting /> },
 
 ];

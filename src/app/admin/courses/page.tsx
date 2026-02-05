@@ -166,7 +166,6 @@ const CoursesPage = () => {
                 </div>
             </div>
 
-            {/* Add Course Modal */}
             <Modal
                 title="Add Course"
                 open={isModalOpen}

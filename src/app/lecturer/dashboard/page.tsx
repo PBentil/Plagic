@@ -27,7 +27,6 @@ interface Schedule {
     };
 }
 
-/* ================= STAT CARD ================= */
 const StatCard = ({
                       title,
                       value,
@@ -56,7 +55,6 @@ const StatCard = ({
     </div>
 );
 
-/* ================= DASHBOARD ================= */
 const LecturerDashboard = () => {
     const [courses, setCourses] = useState<Course[]>([]);
     const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -82,7 +80,6 @@ const LecturerDashboard = () => {
         fetchData();
     }, []);
 
-    /* ================= TABLE ================= */
     const scheduleColumns: ColumnsType<Schedule> = [
         {
             title: "Title",
@@ -122,7 +119,6 @@ const LecturerDashboard = () => {
 
     return (
         <Layout>
-            {/* ================= STATS ================= */}
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <StatCard
                     title="My Courses"
@@ -157,7 +153,6 @@ const LecturerDashboard = () => {
                 />
             </div>
 
-            {/* ================= SCHEDULE TABLE ================= */}
             <div className="bg-white rounded-lg shadow-sm">
                 <div className="flex items-center justify-between px-6 py-4">
                     <h2 className="text-xl font-semibold text-gray-900">
