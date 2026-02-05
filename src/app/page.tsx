@@ -15,6 +15,7 @@ export default function Login() {
             const data = await loginUser(values.email, values.password);
             messageApi.success("Login successful!");
             localStorage.setItem("user", JSON.stringify(data.user));
+
             switch (data.user.role) {
                 case "ADMIN":
                     window.location.href = "/admin/dashboard";
@@ -39,11 +40,12 @@ export default function Login() {
     return (
         <div className="flex items-center justify-center h-screen bg-gray-50">
             {contextHolder}
-            <Spin spinning={loading} size="large">
+
+            <Spin spinning={loading} tip="Signing you in...">
                 <div className="p-6 bg-white shadow-md rounded-xl w-96 space-y-4">
-                    <div className="flex items-center text-primary gap-2 mb-4">
+                    <div className="flex items-center gap-2 mb-4">
                         <FaListCheck className="text-[#0267FF] text-2xl" />
-                        <h2 className="text-xl font-semibold">PLAGICHECKER</h2>
+                        <h2 className="text-xl font-semibold text-black">PLAGICHECKER</h2>
                     </div>
 
                     <div className="text-gray-500 space-y-2">
@@ -51,7 +53,12 @@ export default function Login() {
                         <p>Please enter your login details to access your account</p>
                     </div>
 
-                    <Form layout="vertical" onFinish={handleLogin} autoComplete="off">
+                    <Form
+                        layout="vertical"
+                        onFinish={handleLogin}
+                        autoComplete="off"
+                        disabled={loading}
+                    >
                         <Form.Item
                             label="Email"
                             name="email"
@@ -66,19 +73,29 @@ export default function Login() {
                         <Form.Item
                             label="Password"
                             name="password"
-                            rules={[{ required: true, message: "Please enter your password!" }]}
+                            rules={[
+                                { required: true, message: "Please enter your password!" }
+                            ]}
                         >
                             <Input.Password placeholder="Enter your password" />
                         </Form.Item>
 
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" className="w-full bg-[#0267FF]">
-                                Login
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                loading={loading}
+                                className="w-full bg-[#0267FF]"
+                            >
+                                {loading ? "Logging in..." : "Login"}
                             </Button>
                         </Form.Item>
 
                         <div className="text-sm text-center">
-                            <Link href="/forgot-password" className="text-[#0267FF] hover:underline">
+                            <Link
+                                href="/forgot-password"
+                                className="text-[#0267FF] hover:underline"
+                            >
                                 Forgot password?
                             </Link>
                         </div>
