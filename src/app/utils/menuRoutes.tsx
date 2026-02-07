@@ -25,8 +25,7 @@ export const adminMenu = [
 export const studentMenu = [
     { label: "Dashboard", path: "/student/dashboard", icon: <FaTachometerAlt /> },
     { label: "My Courses", path: "/student/courses", icon: <FaBook /> },
-    { label: "Assignments", path: "/student/assignments", icon: <FaTasks /> },
-    { label: "Profile", path: "/student/profile", icon: <FaUserGraduate /> },
+    { label: "Submissions", path: "/student/submission", icon: <FaTasks /> },
     { label: "Accounting Settings", path: "/account-settings", icon: <AiOutlineSetting /> },
 
 ];
