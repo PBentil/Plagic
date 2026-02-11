@@ -13,6 +13,13 @@ export function getMyStudentCourses() {
     });
 }
 
+export function getAllCourses() {
+    return apiFetch("/courses", {
+        method: "GET",
+    });
+}
+
+
 export function enrollInCourse(courseId: number) {
     return apiFetch(`/enrollments/self-enroll/${courseId}`, {
         method: "POST",

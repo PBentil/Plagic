@@ -31,6 +31,7 @@ interface Course {
 
 interface Schedule {
     id: number;
+    courseId: string;
     assignmentName: string;
     assignmentDescription?: string;
     deadline: string;
@@ -59,7 +60,9 @@ export default function LecturerAssignmentsPage() {
         setLoading(true);
         try {
             const data = await getMyLecturerSchedules();
-            const filtered = data.filter((s: Schedule) => s.course.id === Number(courseId));
+            const filtered = data.filter(
+                (s: Schedule) => Number(s.courseId) === Number(courseId)
+            );
             setSchedules(filtered);
         } catch (err) {
             console.error(err);

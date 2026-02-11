@@ -24,7 +24,8 @@ export const adminMenu = [
 
 export const studentMenu = [
     { label: "Dashboard", path: "/student/dashboard", icon: <FaTachometerAlt /> },
-    { label: "My Courses", path: "/student/courses", icon: <FaBook /> },
+    { label: "Courses", path: "/student/courses", icon: <FaBook /> },
+    { label: "My Courses", path: "/student/my-courses", icon: <FaBook /> },
     { label: "Submissions", path: "/student/submission", icon: <FaTasks /> },
     { label: "Accounting Settings", path: "/account-settings", icon: <AiOutlineSetting /> },
 
@@ -33,7 +34,7 @@ export const studentMenu = [
 export const lecturerMenu = [
     { label: "Dashboard", path: "/lecturer/dashboard", icon: <MdOutlineDashboard  /> },
     { label: "My Classes", path: "/lecturer/courses", icon: <FaChalkboardTeacher /> },
-    { label: "Assignments", path: "/lecturer/courses/${record.id}/assignments", icon: <FaTasks /> },
+    // { label: "Assignments", path: "/lecturer/courses/${record.id}/assignments", icon: <FaTasks /> },
     { label: "Accounting Settings", path: "/account-settings", icon: <AiOutlineSetting /> },
 
 ];

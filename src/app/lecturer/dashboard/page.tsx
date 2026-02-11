@@ -1,12 +1,15 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { BookOpen, ClipboardList, FileCheck, AlertCircle } from "lucide-react";
 import Layout from "@/app/components/Layout";
 import Table from "@/app/components/table";
 import type { ColumnsType } from "antd/es/table";
-import {getMyLecturerCourses, getMyLecturerSchedules} from "@/app/lecturer/services/lectures.services";
-
+import {
+    getMyLecturerCourses,
+    getMyLecturerSchedules,
+} from "@/app/lecturer/services/lectures.services";
 
 interface Course {
     id: number;
@@ -17,14 +20,17 @@ interface Course {
 }
 
 interface Schedule {
-    id: number;
-    title: string;
-    dueDate: string;
-    isPublished: boolean;
+    id: string;
+    courseId: string;
+    assignmentName: string;
+    assignmentDescription?: string;
+    deadline: string;
+    status: "active" | "draft";
+    isActive: boolean;
     course: {
         id: number;
         courseName: string;
-    };
+    } | null;
 }
 
 const StatCard = ({
@@ -45,7 +51,7 @@ const StatCard = ({
             <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
                 <p className={`text-2xl font-bold truncate ${iconColor}`}>
-                    {value.toLocaleString()}
+                    {Number(value || 0).toLocaleString()}
                 </p>
             </div>
             <div className={`${iconBg} p-3 rounded-full flex-shrink-0 ml-4`}>
@@ -68,8 +74,10 @@ const LecturerDashboard = () => {
                     getMyLecturerSchedules(),
                 ]);
 
-                setCourses(coursesData);
-                setSchedules(schedulesData);
+                console.log("Schedules API:", schedulesData); // Debug if needed
+
+                setCourses(Array.isArray(coursesData) ? coursesData : []);
+                setSchedules(Array.isArray(schedulesData) ? schedulesData : []);
             } catch (error) {
                 console.error("Lecturer dashboard error:", error);
             } finally {
@@ -83,28 +91,33 @@ const LecturerDashboard = () => {
     const scheduleColumns: ColumnsType<Schedule> = [
         {
             title: "Title",
-            dataIndex: "title",
-            key: "title",
+            dataIndex: "assignmentName",
+            key: "assignmentName",
         },
         {
             title: "Course",
             key: "course",
-            render: (_, record) => record.course?.courseName || "N/A",
+            render: (_, record) =>
+                record.course?.id || "N/A",
         },
         {
             title: "Due Date",
-            key: "dueDate",
+            key: "deadline",
             render: (_, record) =>
-                new Date(record.dueDate).toLocaleDateString(),
+                new Date(record.deadline).toLocaleDateString(),
         },
         {
             title: "Status",
             key: "status",
             render: (_, record) =>
-                record.isPublished ? (
-                    <span className="text-green-600 font-medium">Published</span>
+                record.status === "active" ? (
+                    <span className="text-green-600 font-medium">
+            Published
+          </span>
                 ) : (
-                    <span className="text-orange-600 font-medium">Draft</span>
+                    <span className="text-orange-600 font-medium">
+            Draft
+          </span>
                 ),
         },
     ];
@@ -138,7 +151,7 @@ const LecturerDashboard = () => {
 
                 <StatCard
                     title="Published"
-                    value={schedules.filter(s => s.isPublished).length}
+                    value={schedules.filter(s => s.status === "active").length}
                     icon={<FileCheck className="h-7 w-7 text-green-600" />}
                     iconBg="bg-green-100"
                     iconColor="text-green-600"
@@ -146,7 +159,7 @@ const LecturerDashboard = () => {
 
                 <StatCard
                     title="Drafts"
-                    value={schedules.filter(s => !s.isPublished).length}
+                    value={schedules.filter(s => s.status === "draft").length}
                     icon={<AlertCircle className="h-7 w-7 text-orange-600" />}
                     iconBg="bg-orange-100"
                     iconColor="text-orange-600"
@@ -171,7 +184,9 @@ const LecturerDashboard = () => {
                         columns={scheduleColumns}
                         data={schedules}
                         loading={loading}
+                        rowKey="id"
                     />
+
                     {!loading && schedules.length === 0 && (
                         <p className="text-center text-gray-500 py-6">
                             No schedules created yet

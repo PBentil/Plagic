@@ -4,30 +4,27 @@ import { useEffect, useState } from "react";
 import { message, Button, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import Layout from "@/app/components/Layout";
-import { getAllCourses, enrollInCourse } from "@/app/student/services/student.service";
+import { getMyStudentCourses, dropCourse } from "@/app/student/services/student.service";
 
 interface Course {
     id: number;
     courseCode: string;
     courseName: string;
     description?: string;
-    isEnrolled?: boolean;
 }
 
-export default function AvailableCoursesPage() {
+export default function StudentCoursesPage() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
-    const [enrollingId, setEnrollingId] = useState<number | null>(null);
-    const [messageApi, contextHolder] = message.useMessage();
 
     const loadCourses = async () => {
         setLoading(true);
         try {
-            const data = await getAllCourses();
+            const data = await getMyStudentCourses();
             setCourses(data);
         } catch (err) {
             console.error(err);
-            messageApi.error("Failed to load courses");
+            message.error("Failed to load courses");
         } finally {
             setLoading(false);
         }
@@ -37,22 +34,14 @@ export default function AvailableCoursesPage() {
         loadCourses();
     }, []);
 
-    const handleEnroll = async (id: number) => {
+    const handleDrop = async (id: number) => {
         try {
-            setEnrollingId(id);
-            await enrollInCourse(id);
-            messageApi.success("Enrolled successfully");
+            await dropCourse(id);
+            message.success("Dropped course successfully");
             loadCourses();
-        } catch (err: any) {
+        } catch (err) {
             console.error(err);
-
-            if (err?.response?.status === 409) {
-                messageApi.warning("You are already enrolled in this course");
-            } else {
-                messageApi.error(err?.response?.data?.message || "Failed to enroll");
-            }
-        } finally {
-            setEnrollingId(null);
+            message.error("Failed to drop course");
         }
     };
 
@@ -77,22 +66,24 @@ export default function AvailableCoursesPage() {
             title: "Actions",
             key: "actions",
             render: (_, record) => (
-                <Button
-                    type="primary"
-                    loading={enrollingId === record.id}
-                    onClick={() => handleEnroll(record.id)}
-                    disabled={record.isEnrolled}
-                >
-                    {record.isEnrolled ? "Enrolled" : "Enroll"}
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        type="primary"
+                        onClick={() => window.location.href = `/student/courses/${record.id}/assignments`}
+                    >
+                        Assignments
+                    </Button>
+                    <Button danger onClick={() => handleDrop(record.id)}>
+                        Drop
+                    </Button>
+                </div>
             ),
         },
     ];
 
     return (
         <Layout>
-            {contextHolder}
-            <h1 className="text-2xl font-semibold mb-6">Available Courses</h1>
+            <h1 className="text-2xl font-semibold mb-6">My Courses</h1>
 
             <Table
                 columns={columns}
